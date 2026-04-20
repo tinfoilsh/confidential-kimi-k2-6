@@ -1,4 +1,4 @@
-cvm-version: 0.7.1
+cvm-version: 0.7.5
 cpus: 32
 gpus: 8
 memory: 524288
@@ -19,10 +19,10 @@ containers:
       # This hash prefix must match the first underscore-delimited segment of the mpk value above.
       "--model", "/tinfoil/mpk/mpk-REPLACE_WITH_MODELWRAP_MPK_HASH_PREFIX",
       "--tensor-parallel-size", "8",
-      "--decode-context-parallel-size", "8",
       "--mm-encoder-tp-mode", "data",
       "--served-model-name", "kimi-k2-6",
       "--enable-auto-tool-choice",
+      "--enable-prompt-tokens-details",
       "--tool-call-parser", "kimi_k2",
       "--reasoning-parser", "kimi_k2",
       "--trust-remote-code",
