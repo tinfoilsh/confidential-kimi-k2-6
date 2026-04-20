@@ -1,0 +1,41 @@
+cvm-version: 0.7.1
+cpus: 32
+gpus: 8
+memory: 524288
+
+models:
+  - name: "kimi-k2-6"
+    repo: "moonshotai/Kimi-K2.6@2b2b88e33c96d813ebb4c83a740252fe08018e3a"
+    # Replace after you provide the modelwrap output.
+    mpk: "REPLACE_WITH_MODELWRAP_MPK"
+
+containers:
+  - name: "kimi-k2-6"
+    image: "vllm/vllm-openai:v0.19.0-cu130@sha256:da83ab68697f08b48a4c06a916411b2853eed69f01b482d41fbf3fab69b4c7be"
+    runtime: nvidia
+    gpus: all
+    ipc: host
+    command: [
+      # This hash prefix must match the first underscore-delimited segment of the mpk value above.
+      "--model", "/tinfoil/mpk/mpk-REPLACE_WITH_MODELWRAP_MPK_HASH_PREFIX",
+      "--tensor-parallel-size", "8",
+      "--decode-context-parallel-size", "8",
+      "--mm-encoder-tp-mode", "data",
+      "--served-model-name", "kimi-k2-6",
+      "--enable-auto-tool-choice",
+      "--tool-call-parser", "kimi_k2",
+      "--reasoning-parser", "kimi_k2",
+      "--trust-remote-code",
+      "--port", "8001",
+      "--scheduling-policy", "priority",
+    ]
+
+shim:
+  upstream-port: 8001
+  authenticated: true
+  authenticated-endpoints:
+    - /v1/chat/completions
+  paths:
+    - /v1/chat/completions
+    - /metrics
+    - /health
