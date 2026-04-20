@@ -11,7 +11,7 @@ models:
 
 containers:
   - name: "kimi-k2-6"
-    image: "vllm/vllm-openai:v0.19.0-cu130@sha256:da83ab68697f08b48a4c06a916411b2853eed69f01b482d41fbf3fab69b4c7be"
+    image: "vllm/vllm-openai:v0.19.1-cu130@sha256:cd7bf919c600a1d7f7312082e9406dd2cbc08024339136d8765dddadc65751ed"
     runtime: nvidia
     gpus: all
     ipc: host
