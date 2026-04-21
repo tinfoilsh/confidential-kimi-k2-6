@@ -14,6 +14,7 @@ containers:
     runtime: nvidia
     gpus: all
     ipc: host
+    restart: always
     command: [
       "--model", "/tinfoil/mpk/mpk-b9a191a313479bccc692491d74803b2520ae28c90bc440f9c76459d297529956",
       "--tensor-parallel-size", "8",
@@ -27,6 +28,11 @@ containers:
       "--port", "8001",
       "--scheduling-policy", "priority",
     ]
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60m
 
 shim:
   upstream-port: 8001
