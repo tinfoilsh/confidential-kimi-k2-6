@@ -1,7 +1,7 @@
-cvm-version: 0.7.5
+cvm-version: 0.10.4
 cpus: 32
-gpus: 8
 memory: 524288
+gpus: 8
 
 models:
   - name: "kimi-k2-6"
@@ -10,24 +10,19 @@ models:
 
 containers:
   - name: "kimi-k2-6"
-    image: "vllm/vllm-openai:v0.20.1-ubuntu2404@sha256:a36517a2adbf237be1f6c6fe5a69febf548141ad37debeb929b78807f2f35e3f"
+    image: "vllm/vllm-openai:v0.22.0@sha256:0fec7ec5f3e6bc168e54899935fb0557da908a4832a1dbc88e2debcf2f889416"
     runtime: nvidia
     gpus: all
-    ipc: host
     restart: always
-    command: [
-      "--model", "/tinfoil/mpk/mpk-b9a191a313479bccc692491d74803b2520ae28c90bc440f9c76459d297529956",
-      "--tensor-parallel-size", "8",
-      "--mm-encoder-tp-mode", "data",
-      "--served-model-name", "kimi-k2-6",
-      "--enable-auto-tool-choice",
-      "--enable-prompt-tokens-details",
-      "--tool-call-parser", "kimi_k2",
-      "--reasoning-parser", "kimi_k2",
-      "--trust-remote-code",
-      "--port", "8001",
-      "--scheduling-policy", "priority",
-    ]
+    env:
+      - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
+    command: ["--model", "/tinfoil/mpk/mpk-b9a191a313479bccc692491d74803b2520ae28c90bc440f9c76459d297529956", "--tensor-parallel-size",
+      "8", "--mm-encoder-tp-mode", "data", "--served-model-name", "kimi-k2-6", "--enable-auto-tool-choice", "--enable-prompt-tokens-details",
+      "--tool-call-parser", "kimi_k2", "--reasoning-parser", "kimi_k2", "--trust-remote-code", "--scheduling-policy", "priority",
+      "--port", "8001"]
+    tmpfs:
+      /tmp: size=512m,mode=1777,exec
+      /root: size=2g,mode=0700,exec
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:8001/health"]
       interval: 30s
