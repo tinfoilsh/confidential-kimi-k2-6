@@ -17,9 +17,11 @@ containers:
     env:
       - PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
       - NUMBA_CACHE_DIR: "/root/numba-cache"
+      - VLLM_ALLREDUCE_USE_SYMM_MEM: "0"
     command: ["--model", "/tinfoil/mpk/mpk-b9a191a313479bccc692491d74803b2520ae28c90bc440f9c76459d297529956", "--tensor-parallel-size",
       "8", "--mm-encoder-tp-mode", "data", "--served-model-name", "kimi-k2-6", "--enable-auto-tool-choice", "--enable-prompt-tokens-details",
       "--tool-call-parser", "kimi_k2", "--reasoning-parser", "kimi_k2", "--trust-remote-code", "--scheduling-policy", "priority",
+      "--disable-custom-all-reduce", "--compilation-config", "{\"pass_config\":{\"fuse_allreduce_rms\":false}}",
       "--port", "8001"]
     tmpfs:
       /tmp: size=512m,mode=1777,exec
